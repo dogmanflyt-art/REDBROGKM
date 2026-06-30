@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RED BRO GK Sinhala - Minecraft</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&display=swap');
+
+    :root {
+      --dirt: #8B6340;
+      --grass: #5D9E3A;
+      --grass-dark: #3A7D1E;
+      --stone: #8A8A8A;
+      --creeper: #4CAF50;
+      --sky: #87CEEB;
+      --night: #0A0E1A;
+      --red: #E53935;
+      --gold: #FFD700;
+      --pixel-border: 4px solid #000;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--night);
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      image-rendering: pixelated;
+    }
+
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute; background: #fff; border-radius: 0;
+      animation: twinkle 2s infinite alternate;
+    }
+    @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+
+    .ground-strip {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 48px;
+      background: repeating-linear-gradient(90deg,
+        var(--grass) 0px, var(--grass) 48px,
+        var(--grass-dark) 48px, var(--grass-dark) 96px);
+      z-index: 1; border-top: 4px solid #000;
+    }
+
+    .hero {
+      position: relative; z-index: 2; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; padding: 40px 20px 100px; text-align: center;
+    }
+
+    .logo-frame {
+      width: 130px; height: 130px; border: 6px solid #000;
+      outline: 3px solid var(--gold); border-radius: 8px; background: #222;
+      overflow: hidden; margin-bottom: 24px;
+      box-shadow: 0 0 0 6px #000, 0 0 24px var(--gold);
+      animation: float 3s ease-in-out infinite;
+    }
+    .logo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .channel-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(14px, 4vw, 26px); color: var(--red);
+      text-shadow: 3px 3px 0 #000, 0 0 20px rgba(229,57,53,0.6);
+      letter-spacing: 2px; margin-bottom: 8px; line-height: 1.5;
+    }
+
+    .sub-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(7px, 2vw, 11px); color: var(--gold);
+      text-shadow: 2px 2px 0 #000; margin-bottom: 12px; letter-spacing: 1px;
+    }
+
+    .subs-badge {
+      display: inline-block; background: #1a1a1a;
+      border: 3px solid var(--grass); padding: 6px 16px;
+      font-family: 'Press Start 2P', monospace; font-size: 9px;
+      color: var(--grass); margin-bottom: 32px; text-shadow: 1px 1px 0 #000;
+    }
+
+    .btn-group {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      justify-content: center; margin-bottom: 24px;
+    }
+
+    .pixel-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(7px, 2vw, 10px); padding: 14px 22px;
+      text-decoration: none; color: #fff; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 10px;
+      border: none; position: relative; transition: transform 0.1s; letter-spacing: 1px;
+    }
+    .pixel-btn::before {
+      content: ''; position: absolute; inset: 0;
+      border: 4px solid rgba(255,255,255,0.3); pointer-events: none;
+    }
+    .pixel-btn:active { transform: translateY(3px); }
+
+    .btn-youtube { background: var(--red); box-shadow: 0 6px 0 #8B0000, 0 0 20px rgba(229,57,53,0.5); }
+    .btn-youtube:hover { box-shadow: 0 4px 0 #8B0000, 0 0 30px rgba(229,57,53,0.8); }
+
+    .btn-pack { background: var(--grass-dark); box-shadow: 0 6px 0 #1B5E20, 0 0 20px rgba(93,158,58,0.5); }
+    .btn-pack:hover { box-shadow: 0 4px 0 #1B5E20, 0 0 30px rgba(93,158,58,0.8); }
+
+    .section { position: relative; z-index: 2; max-width: 800px; margin: 0 auto 60px; padding: 0 20px; }
+
+    .pixel-card {
+      background: #111827; border: 4px solid #000;
+      outline: 2px solid var(--dirt); padding: 28px; position: relative;
+    }
+    .pixel-card::after {
+      content: ''; position: absolute; inset: -8px;
+      border: 2px dashed rgba(255,255,255,0.05); pointer-events: none;
+    }
+
+    .section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(10px, 3vw, 14px); color: var(--gold);
+      text-shadow: 2px 2px 0 #000; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-title::before { content: '▶'; color: var(--grass); }
+
+    .about-text { font-size: 17px; color: #ccc; line-height: 1.8; font-weight: 600; }
+
+    .pack-card { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .pack-icon { font-size: 64px; filter: drop-shadow(0 0 8px var(--grass)); flex-shrink: 0; }
+    .pack-info h3 { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--grass); margin-bottom: 8px; }
+    .pack-info p { font-size: 15px; color: #aaa; margin-bottom: 14px; }
+
+    .pixel-divider { display: flex; align-items: center; margin: 0 20px 48px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .pixel-divider span { flex: 1; height: 4px; background: repeating-linear-gradient(90deg, var(--dirt) 0, var(--dirt) 8px, transparent 8px, transparent 16px); }
+    .pixel-divider em { font-style: normal; font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--stone); padding: 0 12px; }
+
+    footer { position: relative; z-index: 2; text-align: center; padding: 24px 20px 80px; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #555; line-height: 2; }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    .creeper-deco { font-size: 48px; opacity: 0.15; position: fixed; bottom: 60px; right: 20px; z-index: 1; animation: sway 4s ease-in-out infinite; }
+    @keyframes sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+
+    /* LEADERBOARD */
+    .lb-header {
+      display: grid; grid-template-columns: 48px 1fr 90px 90px;
+      background: #0a0a0a; border: 3px solid #000; padding: 10px 14px;
+      font-family: 'Press Start 2P', monospace; font-size: 7px;
+      color: var(--stone); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .lb-row {
+      display: grid; grid-template-columns: 48px 1fr 90px 90px;
+      align-items: center; padding: 12px 14px; border: 3px solid #222;
+      margin-bottom: 6px; background: #111827;
+      transition: border-color 0.2s, background 0.2s; cursor: default;
+    }
+    .lb-row:hover { border-color: var(--gold); background: #1a2030; }
+    .lb-row.rank-1 { border-color: var(--gold); background: #1a1500; }
+    .lb-row.rank-2 { border-color: #aaa; background: #161616; }
+    .lb-row.rank-3 { border-color: var(--dirt); background: #130e08; }
+
+    .lb-rank { font-family: 'Press Start 2P', monospace; font-size: 12px; text-align: center; }
+    .lb-rank.gold   { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+    .lb-rank.silver { color: #ccc; }
+    .lb-rank.bronze { color: var(--dirt); }
+    .lb-rank.normal { color: #555; font-size: 9px; }
+
+    .lb-name { font-size: 15px; font-weight: 700; color: #eee; display: flex; align-items: center; gap: 8px; }
+    .lb-tag { font-family: 'Press Start 2P', monospace; font-size: 6px; background: var(--grass-dark); color: #fff; padding: 2px 5px; border: 1px solid #000; }
+    .lb-score { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--gold); text-align: right; }
+    .lb-extra { font-size: 11px; color: #555; text-align: right; }
+
+    .lb-add-form { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .lb-input {
+      flex: 1; min-width: 120px; background: #0d0d0d; border: 3px solid #333;
+      color: #fff; font-family: 'Press Start 2P', monospace; font-size: 9px;
+      padding: 10px 12px; outline: none;
+    }
+    .lb-input:focus { border-color: var(--gold); }
+    .lb-input::placeholder { color: #444; }
+    .btn-add { background: var(--red); box-shadow: 0 5px 0 #8B0000; font-size: 8px; padding: 10px 16px; white-space: nowrap; }
+    .lb-empty { text-align: center; padding: 24px; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #444; }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="ground-strip"></div>
+<div class="creeper-deco">🤍</div>
+
+<section class="hero">
+  <div class="logo-frame">
+    <img src="https://yt3.googleusercontent.com/ytc/AIdro_lHFKiB0oGcFD91UDV5ZnZQCFgVhGZfopBPBCGCz6YJXA=s176-c-k-c0x00ffffff-no-rj"
+         alt="RED BRO GK Logo"
+         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:48px;line-height:130px\'>🎮</div>'" />
+  </div>
+  <h1 class="channel-name">RED BRO GK<br>SINHALA</h1>
+  <p class="sub-title">MINECRAFT BEDROCK SL</p>
+  <div class="subs-badge">⭐ 55 SUBSCRIBERS ⭐</div>
+  <div class="btn-group">
+    <a class="pixel-btn btn-youtube" href="https://www.youtube.com/@REDBROGK-o5b" target="_blank" rel="noopener">▶ YOUTUBE CHANNEL</a>
+    <a class="pixel-btn btn-pack" href="My_pack_2.mcpack" download="My_pack_2.mcpack">📦 PACK DOWNLOAD</a>
+  </div>
+</section>
+
+<div class="pixel-divider"><span></span><em>ABOUT</em><span></span></div>
+<section class="section">
+  <div class="pixel-card">
+    <h2 class="section-title">Channel About</h2>
+    <p class="about-text">
+      RED BRO GK Sinhala කියන්නේ Sinhala භාෂාවෙන් Minecraft Bedrock content
+      දෙන YouTube channel එකක්. Better Bedrock tips, mods, packs, සහ
+      Minecraft tutorials Sinhala කරලා share කරනවා. Subscribe කරලා support කරන්න! 🎮⛏️
+    </p>
+  </div>
+</section>
+
+<div class="pixel-divider"><span></span><em>MY PACK</em><span></span></div>
+<section class="section">
+  <div class="pixel-card">
+    <h2 class="section-title">Minecraft Pack</h2>
+    <div class="pack-card">
+      <div class="pack-icon">📦</div>
+      <div class="pack-info">
+        <h3>MY PACK V2</h3>
+        <p>RED BRO GK Sinhala විසින් හදපු custom Minecraft Bedrock pack එක.<br>Free download කරගන්න!</p>
+        <a class="pixel-btn btn-pack" href="My_pack_2.mcpack" download="My_pack_2.mcpack" style="display:inline-flex">⬇ DOWNLOAD .mcpack</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pixel-divider"><span></span><em>VIDEOS</em><span></span></div>
+<section class="section">
+  <div class="pixel-card">
+    <h2 class="section-title">Latest Videos</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <a href="https://www.youtube.com/@REDBROGK-o5b" target="_blank" rel="noopener"
+         style="background:#1a1a2e;border:3px solid #333;padding:14px 18px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:12px;"
+         onmouseover="this.style.borderColor='#E53935'" onmouseout="this.style.borderColor='#333'">
+        <span style="font-size:24px">▶</span>
+        <div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:#E53935;margin-bottom:4px">LATEST</div>
+          <div style="font-size:15px;font-weight:700">Bye youtube bye guys</div>
+          <div style="font-size:12px;color:#666">29 views · 3 weeks ago</div>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@REDBROGK-o5b" target="_blank" rel="noopener"
+         style="background:#1a1a2e;border:3px solid #333;padding:14px 18px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:12px;"
+         onmouseover="this.style.borderColor='#5D9E3A'" onmouseout="this.style.borderColor='#333'">
+        <span style="font-size:24px">▶</span>
+        <div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:#5D9E3A;margin-bottom:4px">POPULAR</div>
+          <div style="font-size:15px;font-weight:700">Better on Bedrock Minecraft Sinhala</div>
+          <div style="font-size:12px;color:#666">26 views · 1 month ago</div>
+        </div>
+      </a>
+      <div style="text-align:center;margin-top:8px">
+        <a class="pixel-btn btn-youtube" href="https://www.youtube.com/@REDBROGK-o5b" target="_blank" rel="noopener" style="display:inline-flex">▶ ALL VIDEOS බලන්න</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pixel-divider"><span></span><em>LEADERBOARD</em><span></span></div>
+<section class="section">
+  <div class="pixel-card">
+    <h2 class="section-title">🏆 TOP PLAYERS</h2>
+    <div class="lb-header">
+      <div>#</div><div>Player</div>
+      <div style="text-align:right">Score</div>
+      <div style="text-align:right">Level</div>
+    </div>
+    <div id="lb-list"></div>
+    <div class="lb-add-form">
+      <input class="lb-input" id="lb-name-in" type="text" maxlength="16" placeholder="ඔබේ name..." />
+      <input class="lb-input" id="lb-score-in" type="number" min="0" max="999999" placeholder="Score..." style="max-width:110px"/>
+      <button class="pixel-btn btn-add" onclick="lbAdd()">+ ADD</button>
+    </div>
+    <p style="font-family:'Press Start 2P',monospace;font-size:7px;color:#444;margin-top:10px">* Data is saved in this browser only</p>
+  </div>
+</section>
+
+<footer>
+  <div style="font-size:20px;margin-bottom:12px">⛏️ 🎮 ⛏️</div>
+  © 2026 RED BRO GK SINHALA<br>
+  <a href="https://www.youtube.com/@REDBROGK-o5b" target="_blank">@REDBROGK-o5b</a><br>
+  <span style="color:#333">Made with ❤️ for Minecraft SL community</span>
+</footer>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() < 0.7 ? 2 : 4;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*70}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s;`;
+    starsEl.appendChild(s);
+  }
+
+  const MEDALS = ['🥇','🥈','🥉'];
+  const RANK_CLS = ['gold','silver','bronze'];
+  const LB_KEY = 'redbrogk_lb';
+
+  function lbLoad() { try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; } catch { return []; } }
+  function lbSave(data) { try { localStorage.setItem(LB_KEY, JSON.stringify(data)); } catch {} }
+  function escHtml(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function lbRender() {
+    const data = lbLoad().sort((a,b)=>b.score-a.score);
+    const list = document.getElementById('lb-list');
+    if (!data.length) { list.innerHTML = '<div class="lb-empty">⛏ No players yet. Be the first!</div>'; return; }
+    list.innerHTML = data.slice(0,20).map((p,i)=>{
+      const rankCls = i < 3 ? RANK_CLS[i] : 'normal';
+      const rankIcon = i < 3 ? MEDALS[i] : `#${i+1}`;
+      const tag = i === 0 ? '<span class="lb-tag">TOP</span>' : '';
+      return `<div class="lb-row ${i<3?'rank-'+(i+1):''}">
+        <div class="lb-rank ${rankCls}">${rankIcon}</div>
+        <div class="lb-name">${escHtml(p.name)}${tag}</div>
+        <div class="lb-score">${p.score.toLocaleString()}</div>
+        <div class="lb-extra">Lv.${Math.floor(p.score/100)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function lbAdd() {
+    const nameEl = document.getElementById('lb-name-in');
+    const scoreEl = document.getElementById('lb-score-in');
+    const name = nameEl.value.trim();
+    const score = parseInt(scoreEl.value);
+    if (!name || isNaN(score) || score < 0) return;
+    const data = lbLoad();
+    data.push({ name, score, ts: Date.now() });
+    lbSave(data);
+    nameEl.value = ''; scoreEl.value = '';
+    lbRender();
+  }
+
+  document.getElementById('lb-name-in').addEventListener('keydown', e => { if(e.key==='Enter') lbAdd(); });
+  lbRender();
+
+  document.querySelectorAll('.pixel-btn').forEach(btn => {
+    btn.addEventListener('mousedown', () => { btn.style.transform = 'translateY(4px)'; });
+    btn.addEventListener('mouseup', () => { btn.style.transform = ''; });
+  });
+</script>
+</body>
+  </html>
